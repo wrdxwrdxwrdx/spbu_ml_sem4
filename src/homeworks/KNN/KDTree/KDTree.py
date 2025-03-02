@@ -10,21 +10,21 @@ class KDTree:
 
     def __init__(
         self,
-        x: Sequence[Point],
+        X: Sequence[Point],
         leaf_size: int,
         metric: Optional[Callable[[Point, Point], float]] = None,
     ):
         """KDTree init
 
-        :param x: given points
+        :param X: given points
         :param leaf_size: max size of each leaf in tree
         :param metric: function for determining the distance between two points
         """
-        self._points = x
-        if len(set(map(len, x))) != 1:
+        self._points = X
+        if len(set(map(len, X))) != 1:
             raise ValueError("Points with different dimensions are given")
         self._leaf_size = leaf_size
-        self._root = KDTNode(x, leaf_size)
+        self._root = KDTNode(X, leaf_size)
         self.metric = metric if metric else self._default_metric
 
     @staticmethod
