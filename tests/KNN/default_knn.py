@@ -1,7 +1,7 @@
 import math
 from typing import Callable, Optional, Sequence
 
-from src.homeworks.KNN.KDTree.KDTNode import Point
+from src.homeworks.KNN.knn_tree.KDTNode import Point
 
 
 class DefaultKNN:

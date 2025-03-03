@@ -9,7 +9,12 @@ class KDTNode:
     """Node for K Dimensional Tree"""
 
     def __init__(self, points: Sequence[Point], leaf_size: int, is_leaf=True):
-        """"""
+        """KDTNode init.
+
+        :param points: Sequence of points stored in the node.
+        :param leaf_size: Maximum number of points a leaf node can hold.
+        :param is_leaf: Flag indicating whether the node is a leaf. Defaults to True.
+        """
         self.leaf_size = leaf_size
         self.points = points
         self.axis = self._chose_axis()
@@ -25,11 +30,14 @@ class KDTNode:
         return f"(p:{self.points}, l:{repr(self.left)}, r:{repr(self.right)}, a:{self.axis})"
 
     def _count_variance(self, axis: int) -> float:
-        """Calculating the variance along the axis
+        """
+        Calculates the variance of points along the axis.
 
-        :param axis: the number of the vector's coordinate for comparison
+        :param axis: The index of the vector's coordinate for comparison.
 
-        :return: variance along the axis"""
+        :return: Variance along the axis.
+        """
+
         axis_values = [point[axis] for point in self.points]
         average_axis_value = sum(axis_values) / len(axis_values)
         variance = 0.0
@@ -39,7 +47,10 @@ class KDTNode:
         return variance
 
     def _maintain_init_invariance(self) -> None:
-        """Maintaining init invariance"""
+        """
+        Ensures the node splits correctly if the number of points exceeds the leaf size.
+        """
+
         if len(self.points) <= self.leaf_size:
             return
         self.points = list(sorted(self.points, key=lambda point: point[self.axis]))
@@ -51,9 +62,12 @@ class KDTNode:
         self.is_leaf = False
 
     def _chose_axis(self) -> int:
-        """Choosing the best axis to create a hyperplane
+        """
+        Selects the axis with the highest variance for splitting the data.
 
-        :return: best axis"""
+        :return: Index of the axis with the highest variance.
+        """
+
         if len(self.points) == 0:
             return 0
         variances = [self._count_variance(axis) for axis in range(len(self.points[0]))]

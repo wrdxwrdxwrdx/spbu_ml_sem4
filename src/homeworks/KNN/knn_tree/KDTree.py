@@ -1,12 +1,12 @@
 import math
 from typing import Callable, Optional, Sequence
 
-from src.homeworks.KNN.KDTree.KDTHeap import MaxHeap
-from src.homeworks.KNN.KDTree.KDTNode import KDTNode, Point
+from src.homeworks.KNN.knn_tree.KDTHeap import MaxHeap
+from src.homeworks.KNN.knn_tree.KDTNode import KDTNode, Point
 
 
 class KDTree:
-    """K Dimensional Tree"""
+    """K Dimensional Tree for efficient nearest neighbour search."""
 
     def __init__(
         self,
@@ -14,12 +14,15 @@ class KDTree:
         leaf_size: int,
         metric: Optional[Callable[[Point, Point], float]] = None,
     ):
-        """KDTree init
+        """knn_tree init.
 
-        :param X: given points
-        :param leaf_size: max size of each leaf in tree
-        :param metric: function for determining the distance between two points
+        :param X: Given points.
+        :param leaf_size: Max size of each leaf in tree.
+        :param metric: Function for determining the distance between two points.
+
+        :raises ValueError: If points with different dimensions are provided.
         """
+
         self._points = X
         if len(set(map(len, X))) != 1:
             raise ValueError("Points with different dimensions are given")
@@ -29,13 +32,15 @@ class KDTree:
 
     @staticmethod
     def _default_metric(point_1: Point, point_2: Point) -> float:
-        """The Euclidean metric to determine the distance between points
-
-        :param point_1: first point
-        :param point_2: second point
-
-        :return: distance between points
         """
+        Computes the Euclidean distance between two points.
+
+        :param point_1: First point.
+        :param point_2: Second point.
+
+        :return: Euclidean distance between the points.
+        """
+
         result = 0.0
         for axis in range(len(point_1)):
             result += (point_1[axis] - point_2[axis]) ** 2
@@ -48,17 +53,29 @@ class KDTree:
         return repr(self._root)
 
     def _median_by_axis(self, axis: int) -> Point:
-        """Calculating the median of points along the axis
+        """
+        Calculating the median of points along the axis.
 
-        :param axis: the number of the coordinate in the vector for comparing points
+        :param axis: Axis along which to compute the median.
 
-        :return: the median of the points along the axis"""
+        :return: Median point along the specified axis.
+        """
+
         points = list(sorted(self._points, key=lambda p: p[axis]))
         return points[len(points) // 2]
 
     def _knn_recursion(
         self, point: Point, node: Optional[KDTNode], k: int, max_heap: MaxHeap
     ):
+        """
+        Recursive helper function to find k nearest neighbors.
+
+        :param point: Point for which neighbors are being found.
+        :param node: Current node in the knn_tree.
+        :param k: Number of nearest neighbors.
+        :param max_heap: Max heap to store nearest neighbors.
+        """
+
         # None
         if node is None:
             return max_heap
@@ -91,23 +108,29 @@ class KDTree:
                 self._knn_recursion(point, node.left, k, max_heap)
 
     def k_nearest_neighbours(self, point: Point, k: int) -> Sequence[Point]:
-        """Finding the k closest points to the desired point
+        """
+        Finding the k nearest neighbors for a given point.
 
-        :param point: desired point
-        :param k: number of nearest points
+        :param point: Point for which neighbors are being found.
+        :param k: Number of nearest neighbors.
 
-        :return: sequence of k nearest points"""
+        :return: Sequence of k nearest points.
+        """
+
         max_heap = MaxHeap(self.metric, k)
         self._knn_recursion(point, self._root, k, max_heap)
         return max_heap.points()
 
     def query(self, X: Sequence[Point], k: int) -> Sequence[Sequence[Point]]:
-        """Finding the k closest points to each of the given points
+        """
+        Finds the k nearest neighbors for each point in the input sequence.
 
-        :param X: sequence of desirable points
-        :param k: number of nearest points
+        :param X: Sequence of points.
+        :param k: Number of nearest neighbors.
 
-        :return: sequence of lists of k nearest points for each of the given points"""
+        :return: sequence of lists of k nearest points for each of the given points
+        """
+
         result = []
         for point in X:
             result.append(self.k_nearest_neighbours(point, k))
