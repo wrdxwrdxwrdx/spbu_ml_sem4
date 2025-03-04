@@ -25,6 +25,7 @@ class KDTree:
 
         self._points = X
         if len(set(map(len, X))) != 1:
+            print(X)
             raise ValueError("Points with different dimensions are given")
         self._leaf_size = leaf_size
         self._root = KDTNode(X, leaf_size)
