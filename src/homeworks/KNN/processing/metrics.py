@@ -1,6 +1,6 @@
 from typing import Sequence
 
-from src.homeworks.KNN.knn_tree.KDTNode import Point
+from src.homeworks.KNN.kdt_tree.kdt_Node import Point
 
 
 def accuracy(y_prediction: Sequence[Point], y_true: Sequence[Point]) -> float:

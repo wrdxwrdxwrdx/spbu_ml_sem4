@@ -2,8 +2,8 @@ import random
 
 import pytest
 
-from src.homeworks.KNN.knn_tree.KDTNode import Point
-from src.homeworks.KNN.knn_tree.KDTree import KDTree
+from src.homeworks.KNN.kdt_tree.kd_tree import KDTree
+from src.homeworks.KNN.kdt_tree.kdt_Node import Point
 from tests.KNN.default_knn import DefaultKNN
 
 

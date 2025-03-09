@@ -1,11 +1,11 @@
 import heapq
 from typing import Callable
 
-from src.homeworks.KNN.knn_tree.KDTNode import Point
+from src.homeworks.KNN.kdt_tree.kdt_Node import Point
 
 
 class MaxHeap:
-    """Max heap realization for knn_tree"""
+    """Max heap realization for kdt_tree"""
 
     def __init__(self, metric: Callable[[Point, Point], float], capacity: int):
         """

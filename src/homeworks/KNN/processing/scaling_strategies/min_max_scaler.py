@@ -1,6 +1,6 @@
 from typing import Optional, Sequence
 
-from src.homeworks.KNN.knn_tree.KDTNode import Point
+from src.homeworks.KNN.kdt_tree.kdt_Node import Point
 from src.homeworks.KNN.processing.scaling_strategies.abstract_scaler import \
     AbstractScaler
 

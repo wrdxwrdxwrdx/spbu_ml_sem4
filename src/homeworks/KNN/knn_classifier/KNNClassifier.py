@@ -2,8 +2,8 @@ from typing import Optional, Sequence
 
 import numpy as np
 
-from src.homeworks.KNN.knn_tree.KDTNode import Point
-from src.homeworks.KNN.knn_tree.KDTree import KDTree
+from src.homeworks.KNN.kdt_tree.kd_tree import KDTree
+from src.homeworks.KNN.kdt_tree.kdt_Node import Point
 
 
 class KNNClassifier:
@@ -19,7 +19,7 @@ class KNNClassifier:
         KNN classifier init
 
         :param k: Number of nearest neighbors.
-        :param leaf_size: Leaf size for the knn_tree.
+        :param leaf_size: Leaf size for the kdt_tree.
         """
         self.k = k
         self.leaf_size = leaf_size

@@ -1,8 +1,8 @@
 import math
 from typing import Callable, Optional, Sequence
 
-from src.homeworks.KNN.knn_tree.KDTHeap import MaxHeap
-from src.homeworks.KNN.knn_tree.KDTNode import KDTNode, Point
+from src.homeworks.KNN.kdt_tree.kdt_Heap import MaxHeap
+from src.homeworks.KNN.kdt_tree.kdt_Node import KDTNode, Point
 
 
 class KDTree:
@@ -14,7 +14,7 @@ class KDTree:
         leaf_size: int,
         metric: Optional[Callable[[Point, Point], float]] = None,
     ):
-        """knn_tree init.
+        """kdt_tree init.
 
         :param X: Given points.
         :param leaf_size: Max size of each leaf in tree.
@@ -40,7 +40,12 @@ class KDTree:
         :param point_2: Second point.
 
         :return: Euclidean distance between the points.
+
+        :raises ValueError: If the points are of different dimensions.
         """
+
+        if len(point_1) != len(point_2):
+            raise ValueError("Points must have the same dimension")
 
         result = 0.0
         for axis in range(len(point_1)):
@@ -72,7 +77,7 @@ class KDTree:
         Recursive helper function to find k nearest neighbors.
 
         :param point: Point for which neighbors are being found.
-        :param node: Current node in the knn_tree.
+        :param node: Current node in the kdt_tree.
         :param k: Number of nearest neighbors.
         :param max_heap: Max heap to store nearest neighbors.
         """
