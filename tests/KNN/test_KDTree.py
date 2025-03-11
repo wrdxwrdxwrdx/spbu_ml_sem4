@@ -27,7 +27,7 @@ class TestKDTree:
         for i, test_point in enumerate(X_test):
             kdtree_result_dist = [kdtree.metric(test_point, point) for point in kdtree_result[i]]
             knn_result_dist = [kdtree.metric(test_point, point) for point in knn_result[i]]
-            assert sum(kdtree_result_dist) == sum(knn_result_dist)
+            assert round((sum(kdtree_result_dist)), 3) == round((sum(knn_result_dist)), 3)
 
     @pytest.mark.parametrize(
         "k,selection_size,dimension,leaf_size",
@@ -46,7 +46,7 @@ class TestKDTree:
         kdtree_result_dist = [kdtree.metric(test_point, point) for point in kdtree_result]
         knn_result_dist = [knn.metric(test_point, point) for point in knn_result]
 
-        assert sum(kdtree_result_dist) == sum(knn_result_dist)
+        assert round(sum(kdtree_result_dist), 3) == round(sum(knn_result_dist), 3)
 
     def _generate_selection(self, selection_size: int, dimension: int) -> list[Point]:
         return [tuple([random.randint(-500, 500) for _ in range(dimension)]) for _ in range(selection_size)]

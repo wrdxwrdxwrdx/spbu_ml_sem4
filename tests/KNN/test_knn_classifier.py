@@ -169,9 +169,7 @@ class TestKNNClassifier:
         assert len(predictions) == len(X_predict)
         for prediction in predictions:
             assert isinstance(prediction, int)
-            assert (
-                prediction in Y_train or prediction in range(max(Y_train) + 1) if Y_train else prediction == 0
-            )  # check if predicted class is valid class
+            assert prediction in Y_train or prediction in range(max(Y_train) + 1) if Y_train else prediction == 0
 
     def test_predict_not_fitted(self):
         """Test predict method when the classifier is not fitted."""
