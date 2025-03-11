@@ -1,6 +1,6 @@
 from typing import Optional, Sequence
 
-from src.homeworks.KNN.kdt_tree.kdt_Node import Point
+from src.homeworks.KNN.kdt_tree.kdt_node import Point
 from src.homeworks.KNN.processing.scaling_strategies.abstract_scaler import \
     AbstractScaler
 
@@ -77,7 +77,7 @@ class MinMaxScaler(AbstractScaler):
             new_point = []
             for axis, coordinate in enumerate(point):
                 if self.max[axis] - self.min[axis] == 0:
-                    new_point.append(0)
+                    new_point.append(0.0)
                 else:
                     new_point.append(
                         (coordinate - self.min[axis])

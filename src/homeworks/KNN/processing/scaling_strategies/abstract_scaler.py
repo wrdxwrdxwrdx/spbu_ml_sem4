@@ -1,7 +1,7 @@
 from abc import ABC
 from typing import Sequence
 
-from src.homeworks.KNN.kdt_tree.kdt_Node import Point
+from src.homeworks.KNN.kdt_tree.kdt_node import Point
 
 
 class AbstractScaler(ABC):

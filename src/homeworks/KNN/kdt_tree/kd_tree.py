@@ -1,8 +1,8 @@
 import math
 from typing import Callable, Optional, Sequence
 
-from src.homeworks.KNN.kdt_tree.kdt_Heap import MaxHeap
-from src.homeworks.KNN.kdt_tree.kdt_Node import KDTNode, Point
+from src.homeworks.KNN.kdt_tree.kdt_heap import MaxHeap
+from src.homeworks.KNN.kdt_tree.kdt_node import KDTNode, Point
 
 
 class KDTree:

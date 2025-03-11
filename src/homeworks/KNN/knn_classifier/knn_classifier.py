@@ -3,7 +3,7 @@ from typing import Optional, Sequence
 import numpy as np
 
 from src.homeworks.KNN.kdt_tree.kd_tree import KDTree
-from src.homeworks.KNN.kdt_tree.kdt_Node import Point
+from src.homeworks.KNN.kdt_tree.kdt_node import Point
 
 
 class KNNClassifier:

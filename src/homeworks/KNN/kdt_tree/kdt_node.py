@@ -2,7 +2,7 @@ from typing import Optional, Sequence
 
 import numpy as np
 
-Point = tuple[float, ...] | list[float]
+Point = tuple[float, ...]
 
 
 class KDTNode:

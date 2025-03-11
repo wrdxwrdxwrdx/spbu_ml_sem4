@@ -3,8 +3,8 @@ import math
 
 import pytest
 
-from src.homeworks.KNN.kdt_tree.kdt_Heap import MaxHeap
-from src.homeworks.KNN.kdt_tree.kdt_Node import Point
+from src.homeworks.KNN.kdt_tree.kdt_heap import MaxHeap
+from src.homeworks.KNN.kdt_tree.kdt_node import Point
 
 
 def euclidean_distance(point1: Point, point2: Point) -> float:

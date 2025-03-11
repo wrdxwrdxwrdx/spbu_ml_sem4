@@ -1,6 +1,6 @@
 import pytest
 
-from src.homeworks.KNN.kdt_tree.kdt_Node import KDTNode
+from src.homeworks.KNN.kdt_tree.kdt_node import KDTNode
 
 
 class TestKDTNode:

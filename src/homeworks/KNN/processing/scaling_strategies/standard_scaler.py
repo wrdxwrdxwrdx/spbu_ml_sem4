@@ -1,6 +1,6 @@
 from typing import Optional, Sequence
 
-from src.homeworks.KNN.kdt_tree.kdt_Node import Point
+from src.homeworks.KNN.kdt_tree.kdt_node import Point
 from src.homeworks.KNN.processing.scaling_strategies.abstract_scaler import \
     AbstractScaler
 
@@ -77,7 +77,7 @@ class StandardScaler(AbstractScaler):
         result = []
         for point in X:
             new_point = [
-                (point[i] - self.mean[i]) / self.std[i] if self.std[i] else 0
+                (point[i] - self.mean[i]) / self.std[i] if self.std[i] else 0.0
                 for i in range(len(point))
             ]
             result.append(tuple(new_point))

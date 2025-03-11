@@ -4,7 +4,7 @@ from typing import Sequence
 
 import numpy as np
 
-from src.homeworks.KNN.kdt_tree.kdt_Node import Point
+from src.homeworks.KNN.kdt_tree.kdt_node import Point
 
 
 def train_test_split(
