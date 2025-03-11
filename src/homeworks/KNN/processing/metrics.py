@@ -38,6 +38,10 @@ def f1_score(y_prediction: Sequence[Point], y_true: Sequence[Point]) -> float:
                 false_positive += 1
             else:
                 false_negative += 1
+
+    if true_positive == 0:
+        return 0.0
+
     precision = true_positive / (true_positive + false_positive)
     recall = true_positive / (true_positive + false_negative)
 

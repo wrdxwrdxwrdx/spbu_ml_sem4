@@ -56,6 +56,8 @@ class MaxAbsScaler(AbstractScaler):
         for point in X:
             new_point = []
             for axis, coordinate in enumerate(point):
-                new_point.append((coordinate / self.max_abs[axis]))
+                new_point.append(
+                    (coordinate / self.max_abs[axis]) if self.max_abs[axis] else 0
+                )
             result.append(tuple(new_point))
         return result

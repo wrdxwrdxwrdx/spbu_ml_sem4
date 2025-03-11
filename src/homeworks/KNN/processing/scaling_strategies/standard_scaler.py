@@ -77,7 +77,8 @@ class StandardScaler(AbstractScaler):
         result = []
         for point in X:
             new_point = [
-                (point[i] - self.mean[i]) / self.std[i] for i in range(len(point))
+                (point[i] - self.mean[i]) / self.std[i] if self.std[i] else 0
+                for i in range(len(point))
             ]
             result.append(tuple(new_point))
         return result

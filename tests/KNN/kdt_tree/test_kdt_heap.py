@@ -1,141 +1,208 @@
-# --- START OF FILE test_kdt_Heap.py ---
 import heapq
-import random
-from typing import Callable
+import math
 
 import pytest
 
 from src.homeworks.KNN.kdt_tree.kdt_Heap import MaxHeap
-from src.homeworks.KNN.kdt_tree.kdt_Node import \
-    Point  # Assuming Point is defined in kdt_Node.py
+from src.homeworks.KNN.kdt_tree.kdt_Node import Point
 
 
 def euclidean_distance(point1: Point, point2: Point) -> float:
-    """Simple euclidean distance for 2D points for testing."""
+    """Euclidean distance metric for testing."""
     if len(point1) != len(point2):
         raise ValueError("Points must have the same dimension")
-    return sum((p1 - p2) ** 2 for p1, p2 in zip(point1, point2)) ** 0.5
+    return math.sqrt(sum((p1 - p2) ** 2 for p1, p2 in zip(point1, point2)))
 
 
 class TestMaxHeap:
-    """Tests for MaxHeap class."""
+    """Property-based tests for MaxHeap class."""
 
-    @pytest.mark.parametrize("capacity", list(range(100)))
-    def test_init(self, capacity):
+    @pytest.mark.parametrize(
+        "capacity",
+        [0, 1, 5, 10, 100, -1, 2, 7, 15, 30],
+    )
+    def test_init(self, capacity: int):
         """Test MaxHeap initialization."""
         metric = euclidean_distance
-        max_heap = MaxHeap(metric, capacity)
-        assert max_heap.metric == metric
-        assert max_heap.capacity == capacity
-        assert max_heap.heap == []
+        heap = MaxHeap(metric, capacity)
+        assert heap.capacity == capacity
+        assert heap.metric == metric
+        assert heap.heap == []
 
-    @pytest.mark.parametrize("capacity", list(range(20, 50)))
-    def test_push_basic(self, capacity):
-        """Basic test for push method."""
+    @pytest.mark.parametrize(
+        "capacity, points_to_push",
+        [
+            (3, [(1, 1), (2, 2), (3, 3)]),
+            (2, [(4, 4), (5, 5), (1, 1)]),
+            (1, [(1, 1)]),
+            (4, []),
+            (2, [(5, 5), (4, 4), (6, 6), (3, 3)]),
+            (0, [(1, 1), (2, 2)]),  # Capacity 0, nothing should be added
+            (3, [(0, 0), (0, 0), (0, 0)]),  # Identical points
+            (2, [(-1, -1), (-2, -2), (-3, -3)]),  # Negative coordinates
+            (3, [(1.5, 2.5), (2.5, 3.5), (3.5, 4.5)]),  # Float coordinates
+        ],
+    )
+    def test_push(self, capacity, points_to_push):
+        """Test push method."""
         metric = euclidean_distance
-        max_heap = MaxHeap(metric, capacity)
-        points_to_push = [
-            (random.randint(-500, 500), random.randint(-500, 500))
-            for _ in range(capacity)
-        ]
-
+        heap = MaxHeap(metric, capacity)
         ref_point = (0, 0)
+        expected = []
         for point in points_to_push:
-            max_heap.push(ref_point, point)
+            heap.push(ref_point, point)
+            heapq.heappush(expected, (euclidean_distance(ref_point, point), point))
+            assert set(sorted(expected)[:capacity]) == set(
+                map(lambda x: (-x[0], x[1]), heap.heap)
+            )
 
-        assert max_heap.max_dist() == max(
-            [metric(ref_point, point) for point in points_to_push]
-        )
-        assert not max_heap.is_empty()
-
-    @pytest.mark.parametrize("capacity", list(range(20, 50)))
-    def test_push_capacity_limit(self, capacity):
-        """Test push method when capacity is reached and exceeded."""
-        metric = euclidean_distance
-        max_heap = MaxHeap(metric, capacity)
-        points_to_push = [
-            (random.randint(-500, 500), random.randint(-500, 500))
-            for _ in range(2 * capacity)
-        ]
-
-        ref_point = (0, 0)
-        for point in points_to_push:
-            max_heap.push(ref_point, point)
-
-        assert max_heap.max_dist() == max(
-            [metric(ref_point, point) for point in points_to_push]
-        )
-        assert not max_heap.is_empty()
-        assert len(max_heap) == capacity
-
-    def test_is_empty(self):
+    @pytest.mark.parametrize(
+        "capacity, points_to_push, expected_empty",
+        [
+            (3, [], True),
+            (3, [(1, 1)], False),
+            (0, [], True),
+            (1, [], True),
+            (5, [(1, 1), (2, 2), (3, 3)], False),
+            (2, [], True),
+            (
+                4,
+                [(1,)],
+                False,
+            ),  # different dimension point, but we are just checking is_empty after init and push
+            (3, [(-1, -1)], False),
+            (2, [(1.5, 2.5)], False),
+        ],
+    )
+    def test_is_empty(
+        self, capacity: int, points_to_push: list[Point], expected_empty: bool
+    ):
         """Test is_empty method."""
         metric = euclidean_distance
-        max_heap = MaxHeap(metric, 3)
-        assert max_heap.is_empty()
+        heap = MaxHeap(metric, capacity)
+        assert heap.is_empty()
 
-        max_heap.push((0, 0), (1, 1))
-        assert not max_heap.is_empty()
+        for point in points_to_push:
+            heap.push(point, point)
+        assert heap.is_empty() == expected_empty
 
-    @pytest.mark.parametrize("capacity", list(range(20, 50)))
-    def test_max_dist_basic(self, capacity):
-        """Basic test for max_dist method."""
+    @pytest.mark.parametrize(
+        "capacity, points_to_push, expected_max_dist",
+        [
+            (3, [], 0.0),
+            (3, [(1, 0)], 1.0),
+            (2, [(1, 1), (0, 0)], math.sqrt(2)),
+            (1, [(5, 0), (1, 0)], 1.0),
+            (
+                4,
+                [(3, 4), (1, 2), (5, 6)],
+                math.sqrt(36 + 25),
+            ),  # max distance from (0,0) to (5,6)
+            (
+                2,
+                [(1, 1), (2, 2), (0.5, 0.5)],
+                math.sqrt(2),
+            ),  # capacity 2, so max of top 2 distances
+            (0, [], 0.0),
+            (3, [(0, 0), (0, 0), (0, 0)], 0.0),
+            (2, [(-3, 0), (-1, 0)], 3.0),
+            (3, [(1.5, 0), (0.5, 0), (2.5, 0)], 2.5),
+        ],
+    )
+    def test_max_dist(
+        self, capacity: int, points_to_push: list[Point], expected_max_dist: float
+    ):
+        """Test max_dist method."""
         metric = euclidean_distance
-        max_heap = MaxHeap(metric, capacity)
-        points_to_push = [
-            (random.randint(-500, 500), random.randint(-500, 500))
-            for _ in range(capacity)
-        ]
+        heap = MaxHeap(metric, capacity)
+        assert heap.max_dist() == 0.0  # initially 0
 
         ref_point = (0, 0)
         for point in points_to_push:
-            max_heap.push(ref_point, point)
-        expected_max_dist = max([metric(ref_point, point) for point in points_to_push])
-        assert not max_heap.is_empty()
-        assert max_heap.max_dist() == expected_max_dist
+            heap.push(ref_point, point)
 
-    def test_max_dist_empty_heap(self):
-        """Test max_dist method for empty heap."""
-        metric = euclidean_distance
-        max_heap = MaxHeap(metric, 3)
-        assert max_heap.max_dist() == 0
+        if capacity <= 0 or not points_to_push:
+            assert heap.max_dist() == 0.0
+        else:
+            v = heap.max_dist()
+            assert heap.max_dist() == expected_max_dist
 
-    @pytest.mark.parametrize("capacity", list(range(20, 50)))
-    def test_points_basic(self, capacity):
-        """Basic test for points method."""
+    @pytest.mark.parametrize(
+        "capacity, points_to_push,_",
+        [
+            (3, [], []),
+            (3, [(1, 0)], [(1, 0)]),
+            (2, [(1, 1), (0, 0)], [(1, 1), (0, 0)]),
+            (4, [(3, 4), (1, 2), (5, 6)], [(5, 6), (3, 4), (1, 2)]),
+            (0, [], []),
+            (3, [(0, 0), (0, 0), (0, 0)], [(0, 0), (0, 0), (0, 0)]),
+            (2, [(-3, 0), (-1, 0)], [(-3, 0), (-1, 0)]),
+            (3, [(1.5, 0), (0.5, 0), (2.5, 0)], [(2.5, 0), (1.5, 0), (0.5, 0)]),
+        ],
+    )
+    def test_points(self, capacity: int, points_to_push: list[Point], _):
+        """Test points method."""
         metric = euclidean_distance
-        max_heap = MaxHeap(metric, capacity)
+        heap = MaxHeap(metric, capacity)
+
         ref_point = (0, 0)
-        points_to_push = [
-            (random.randint(-500, 500), random.randint(-500, 500))
-            for _ in range(capacity)
-        ]
-
         for point in points_to_push:
-            max_heap.push(ref_point, point)
+            heap.push(ref_point, point)
 
-        heap_points = max_heap.points()
-        assert set(heap_points) == set(
-            points_to_push
-        )  # Order is not guaranteed in heap
+        returned_points = heap.points()
+        if capacity > 0 and points_to_push:
+            expected_points_with_distances = []
+            for p in points_to_push:
+                expected_points_with_distances.append((-metric(ref_point, p), p))
+            expected_points_with_distances.sort(
+                key=lambda x: x[0]
+            )  # sort by distance DESC
+            expected_points = [item[1] for item in expected_points_with_distances]
 
-    def test_points_empty_heap(self):
-        """Test points method for empty heap."""
+            if capacity < len(expected_points):
+                expected_points = expected_points[:capacity]
+
+            assert (
+                len(returned_points) == min(capacity, len(points_to_push))
+                if capacity > 0
+                else 0
+            )
+
+            # check if all expected points are in returned points. Order doesn't strictly matter for points(), only content.
+            returned_points_set = set(
+                tuple(p) for p in returned_points
+            )  # convert to tuples to make hashable
+            expected_points_set = set(tuple(p) for p in expected_points)
+            assert returned_points_set == expected_points_set
+        else:
+            assert returned_points == []
+
+    @pytest.mark.parametrize(
+        "capacity, points_to_push, expected_len",
+        [
+            (3, [], 0),
+            (3, [(1, 0)], 1),
+            (2, [(1, 1), (0, 0)], 2),
+            (1, [(5, 0), (1, 0)], 1),
+            (
+                4,
+                [(3, 4), (1, 2), (5, 6), (7, 8), (9, 10)],
+                4,
+            ),  # push more than capacity
+            (2, [(1, 1), (2, 2), (0.5, 0.5)], 2),  # capacity 2, so len should be max 2
+            (0, [], 0),
+            (3, [(0, 0), (0, 0), (0, 0)], 3),
+            (2, [(-3, 0), (-1, 0), (-5, 0)], 2),
+            (3, [(1.5, 0), (0.5, 0), (2.5, 0), (3.5, 0)], 3),
+        ],
+    )
+    def test_len(self, capacity: int, points_to_push: list[Point], expected_len: int):
+        """Test __len__ method."""
         metric = euclidean_distance
-        max_heap = MaxHeap(metric, 3)
-        assert max_heap.points() == []
+        heap = MaxHeap(metric, capacity)
+        assert len(heap) == 0  # initially 0
 
-    def test_len_basic(self):
-        """Basic test for __len__ method."""
-        metric = euclidean_distance
-        max_heap = MaxHeap(metric, 3)
-        assert len(max_heap) == 0
-
-        max_heap.push((0, 0), (1, 1))
-        assert len(max_heap) == 1
-        max_heap.push((0, 0), (2, 2))
-        assert len(max_heap) == 2
-        max_heap.push((0, 0), (3, 3))
-        assert len(max_heap) == 3
-        max_heap.push((0, 0), (0.1, 0.1))
-        assert len(max_heap) == 3
+        ref_point = (0, 0)
+        for point in points_to_push:
+            heap.push(ref_point, point)
+        assert len(heap) == expected_len

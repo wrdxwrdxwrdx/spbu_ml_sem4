@@ -76,8 +76,12 @@ class MinMaxScaler(AbstractScaler):
         for point in X:
             new_point = []
             for axis, coordinate in enumerate(point):
-                new_point.append(
-                    (coordinate - self.min[axis]) / (self.max[axis] - self.min[axis])
-                )
+                if self.max[axis] - self.min[axis] == 0:
+                    new_point.append(0)
+                else:
+                    new_point.append(
+                        (coordinate - self.min[axis])
+                        / (self.max[axis] - self.min[axis])
+                    )
             result.append(tuple(new_point))
         return result
