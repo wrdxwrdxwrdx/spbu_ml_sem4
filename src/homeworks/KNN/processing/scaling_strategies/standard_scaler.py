@@ -1,9 +1,7 @@
 from typing import Optional, Sequence
 
 from src.homeworks.KNN.kdt_tree.kdt_node import Point
-from src.homeworks.KNN.processing.scaling_strategies.abstract_scaler import (
-    AbstractScaler,
-)
+from src.homeworks.KNN.processing.scaling_strategies.abstract_scaler import AbstractScaler
 
 
 class StandardScaler(AbstractScaler):
@@ -71,15 +69,10 @@ class StandardScaler(AbstractScaler):
             raise ValueError("there are points with different dimensions in X")
 
         if self.mean is None or self.std is None:
-            raise ValueError(
-                "StandardScaler is not trained. To get started, use the fit method"
-            )
+            raise ValueError("StandardScaler is not trained. To get started, use the fit method")
 
         result = []
         for point in X:
-            new_point = [
-                (point[i] - self.mean[i]) / self.std[i] if self.std[i] else 0.0
-                for i in range(len(point))
-            ]
+            new_point = [(point[i] - self.mean[i]) / self.std[i] if self.std[i] else 0.0 for i in range(len(point))]
             result.append(tuple(new_point))
         return result

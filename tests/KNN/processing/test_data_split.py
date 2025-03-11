@@ -19,15 +19,11 @@ class TestDataSplit:
             (0.4, True, 5),
         ],
     )
-    def test_train_test_split_size(
-        self, test_size: float, to_shuffle: bool, seed: int
-    ) -> None:
+    def test_train_test_split_size(self, test_size: float, to_shuffle: bool, seed: int) -> None:
         """Test if the split size is correct."""
         X = [(float(i),) for i in range(100)]
         y = list(range(100))
-        X_train, X_test, y_train, y_test = train_test_split(
-            X, y, test_size=test_size, to_shuffle=to_shuffle, seed=seed
-        )
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, to_shuffle=to_shuffle, seed=seed)
         assert len(X_test) == int(len(X) * test_size)
         assert len(X_train) == len(X) - int(len(X) * test_size)
         assert len(X_train) == len(y_train)
@@ -48,15 +44,11 @@ class TestDataSplit:
             (0.4, False, 42),
         ],
     )
-    def test_train_test_split_no_shuffle_order(
-        self, test_size: float, to_shuffle: bool, seed: int
-    ) -> None:
+    def test_train_test_split_no_shuffle_order(self, test_size: float, to_shuffle: bool, seed: int) -> None:
         """Test if the order is preserved when shuffle is False."""
         X = [(float(i),) for i in range(10)]
         y = list(range(10))
-        X_train, X_test, y_train, y_test = train_test_split(
-            X, y, test_size=test_size, to_shuffle=to_shuffle, seed=seed
-        )
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, to_shuffle=to_shuffle, seed=seed)
         split_pointer = int(len(X) * (1 - test_size))
         assert X_train == X[:split_pointer]
         assert X_test == X[split_pointer:]
@@ -78,15 +70,11 @@ class TestDataSplit:
             (0.4, True, 5, 120),
         ],
     )
-    def test_train_test_split_total_length(
-        self, test_size: float, to_shuffle: bool, seed: int, input_len: int
-    ) -> None:
+    def test_train_test_split_total_length(self, test_size: float, to_shuffle: bool, seed: int, input_len: int) -> None:
         """Test if the total length is preserved after split."""
         X = [(float(i),) for i in range(input_len)]
         y = list(range(input_len))
-        X_train, X_test, y_train, y_test = train_test_split(
-            X, y, test_size=test_size, to_shuffle=to_shuffle, seed=seed
-        )
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, to_shuffle=to_shuffle, seed=seed)
         assert len(X_train) + len(X_test) == input_len
         assert len(y_train) + len(y_test) == input_len
 
@@ -132,9 +120,7 @@ class TestDataSplit:
     ) -> None:
         """Test if data integrity is maintained after split (pairs of X and y are kept together after shuffling)."""
         X, y = input_data
-        X_train, X_test, y_train, y_test = train_test_split(
-            X, y, test_size=test_size, to_shuffle=to_shuffle, seed=seed
-        )
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, to_shuffle=to_shuffle, seed=seed)
         if to_shuffle:
             combined_original = list(zip(X, y))
             combined_train = list(zip(X_train, y_train))
@@ -142,9 +128,7 @@ class TestDataSplit:
 
             reconstructed_data = combined_train + combined_test
             # Sort both lists of tuples by the original index (if we could track it, but shuffle is random, so we just check the elements are the same)
-            assert set(tuple(sorted(combined_original))) == set(
-                tuple(sorted(reconstructed_data))
-            )
+            assert set(tuple(sorted(combined_original))) == set(tuple(sorted(reconstructed_data)))
         else:
             split_pointer = int(len(X) * (1 - test_size))
             assert list(X_train) == list(X[:split_pointer])

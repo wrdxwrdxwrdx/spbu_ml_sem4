@@ -70,9 +70,7 @@ class KDTree:
         points = list(sorted(self._points, key=lambda p: p[axis]))
         return points[len(points) // 2]
 
-    def _knn_recursion(
-        self, point: Point, node: Optional[KDTNode], k: int, max_heap: MaxHeap
-    ):
+    def _knn_recursion(self, point: Point, node: Optional[KDTNode], k: int, max_heap: MaxHeap):
         """
         Recursive helper function to find k nearest neighbors.
 
@@ -108,9 +106,7 @@ class KDTree:
             self._knn_recursion(point, node.right, k, max_heap)
             axis = node.axis
             hyperplane_dist = abs(point[axis] - node.points[0][axis])
-            if hyperplane_dist < max_heap.max_dist() or (
-                node and node.left and not node.is_leaf and node.left.is_leaf
-            ):
+            if hyperplane_dist < max_heap.max_dist() or (node and node.left and not node.is_leaf and node.left.is_leaf):
                 self._knn_recursion(point, node.left, k, max_heap)
 
     def k_nearest_neighbours(self, point: Point, k: int) -> Sequence[Point]:

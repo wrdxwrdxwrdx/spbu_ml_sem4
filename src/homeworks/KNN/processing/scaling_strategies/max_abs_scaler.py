@@ -1,9 +1,7 @@
 from typing import Optional, Sequence
 
 from src.homeworks.KNN.kdt_tree.kdt_node import Point
-from src.homeworks.KNN.processing.scaling_strategies.abstract_scaler import (
-    AbstractScaler,
-)
+from src.homeworks.KNN.processing.scaling_strategies.abstract_scaler import AbstractScaler
 
 
 class MaxAbsScaler(AbstractScaler):
@@ -38,9 +36,7 @@ class MaxAbsScaler(AbstractScaler):
         if len(set(map(len, X))) != 1:
             raise ValueError("there are points with different dimensions in X")
 
-        self.max_abs = tuple(
-            [self._get_max_abs_by_axis(X, axis) for axis in range(len(X[0]))]
-        )
+        self.max_abs = tuple([self._get_max_abs_by_axis(X, axis) for axis in range(len(X[0]))])
 
     def transform(self, X: Sequence[Point]) -> list[Point]:
         if len(X) == 0:
@@ -49,16 +45,12 @@ class MaxAbsScaler(AbstractScaler):
             raise ValueError("there are points with different dimensions in X")
 
         if self.max_abs is None:
-            raise ValueError(
-                "MinMaxScaler is not trained. To get started, use the fit method"
-            )
+            raise ValueError("MinMaxScaler is not trained. To get started, use the fit method")
 
         result = []
         for point in X:
             new_point = []
             for axis, coordinate in enumerate(point):
-                new_point.append(
-                    (coordinate / self.max_abs[axis]) if self.max_abs[axis] else 0
-                )
+                new_point.append((coordinate / self.max_abs[axis]) if self.max_abs[axis] else 0)
             result.append(tuple(new_point))
         return result

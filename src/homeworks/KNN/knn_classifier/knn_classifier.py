@@ -37,9 +37,7 @@ class KNNClassifier:
         :raises ValueError: If the sizes of X and Y do not match.
         """
         if len(X) != len(Y):
-            raise ValueError(
-                "The size of the sequence of points is not equal to the size of the target sequence"
-            )
+            raise ValueError("The size of the sequence of points is not equal to the size of the target sequence")
 
         self.kdtree = KDTree(X, self.leaf_size)
         for i in range(len(X)):
@@ -71,9 +69,7 @@ class KNNClassifier:
         :raises ValueError: If the model has not been trained.
         """
         if self.kdtree is None:
-            raise ValueError(
-                "The model has not been trained yet. First, use the fit method"
-            )
+            raise ValueError("The model has not been trained yet. First, use the fit method")
 
         k_nearest_points = self.kdtree.query(X, self.k)
         result = []

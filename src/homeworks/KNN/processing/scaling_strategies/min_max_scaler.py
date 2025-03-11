@@ -1,9 +1,7 @@
 from typing import Optional, Sequence
 
 from src.homeworks.KNN.kdt_tree.kdt_node import Point
-from src.homeworks.KNN.processing.scaling_strategies.abstract_scaler import (
-    AbstractScaler,
-)
+from src.homeworks.KNN.processing.scaling_strategies.abstract_scaler import AbstractScaler
 
 
 class MinMaxScaler(AbstractScaler):
@@ -69,9 +67,7 @@ class MinMaxScaler(AbstractScaler):
             raise ValueError("there are points with different dimensions in X")
 
         if self.min is None or self.max is None:
-            raise ValueError(
-                "MinMaxScaler is not trained. To get started, use the fit method"
-            )
+            raise ValueError("MinMaxScaler is not trained. To get started, use the fit method")
 
         result = []
         for point in X:
@@ -80,9 +76,6 @@ class MinMaxScaler(AbstractScaler):
                 if self.max[axis] - self.min[axis] == 0:
                     new_point.append(0.0)
                 else:
-                    new_point.append(
-                        (coordinate - self.min[axis])
-                        / (self.max[axis] - self.min[axis])
-                    )
+                    new_point.append((coordinate - self.min[axis]) / (self.max[axis] - self.min[axis]))
             result.append(tuple(new_point))
         return result

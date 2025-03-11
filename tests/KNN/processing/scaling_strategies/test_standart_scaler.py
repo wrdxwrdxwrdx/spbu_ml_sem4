@@ -1,8 +1,6 @@
 import pytest
 
-from src.homeworks.KNN.processing.scaling_strategies.standard_scaler import (
-    StandardScaler,
-)
+from src.homeworks.KNN.processing.scaling_strategies.standard_scaler import StandardScaler
 
 
 class TestStandardScaler:
@@ -68,9 +66,7 @@ class TestStandardScaler:
                 with pytest.raises(IndexError):
                     scaler._compute_std(X)
             elif X:
-                actual_std = scaler._compute_std(
-                    X, scaler._compute_mean(X) if X else None
-                )
+                actual_std = scaler._compute_std(X, scaler._compute_mean(X) if X else None)
                 assert actual_std == pytest.approx(expected_std, abs=1e-6)
 
     @pytest.mark.parametrize(
@@ -135,9 +131,7 @@ class TestStandardScaler:
             with pytest.raises(ValueError, match="X is empty"):
                 scaler.transform(X)
         elif len(set(map(len, X))) != 1 and X:
-            with pytest.raises(
-                ValueError, match="there are points with different dimensions in X"
-            ):
+            with pytest.raises(ValueError, match="there are points with different dimensions in X"):
                 scaler.transform(X)
         else:
             if X:
@@ -150,19 +144,13 @@ class TestStandardScaler:
                 for point in X:
                     new_point = tuple(
                         [
-                            (
-                                (point[i] - expected_mean[i]) / expected_std[i]
-                                if expected_std[i]
-                                else 0
-                            )
+                            ((point[i] - expected_mean[i]) / expected_std[i] if expected_std[i] else 0)
                             for i in range(len(point))
                         ]
                     )
                     expected_transformed_X.append(new_point)
 
-                for actual_point, expected_point in zip(
-                    transformed_X, expected_transformed_X
-                ):
+                for actual_point, expected_point in zip(transformed_X, expected_transformed_X):
                     assert actual_point == pytest.approx(expected_point, abs=1e-6)
             else:
                 with pytest.raises(ValueError, match="X is empty"):

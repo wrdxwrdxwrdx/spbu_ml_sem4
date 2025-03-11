@@ -62,12 +62,8 @@ class TestMinMaxScaler:
         points = [p for p in X]
         scaler = MinMaxScaler()
         scaler.fit(points)
-        expected_min = tuple(
-            MinMaxScaler._get_min_by_axis(points, axis) for axis in range(len(X[0]))
-        )
-        expected_max = tuple(
-            MinMaxScaler._get_max_by_axis(points, axis) for axis in range(len(X[0]))
-        )
+        expected_min = tuple(MinMaxScaler._get_min_by_axis(points, axis) for axis in range(len(X[0])))
+        expected_max = tuple(MinMaxScaler._get_max_by_axis(points, axis) for axis in range(len(X[0])))
         assert scaler.min == expected_min
         assert scaler.max == expected_max
 
@@ -97,8 +93,7 @@ class TestMinMaxScaler:
             new_point = []
             for axis, coordinate in enumerate(point):
                 expected_val = (
-                    (coordinate - scaler.min[axis])
-                    / (scaler.max[axis] - scaler.min[axis])
+                    (coordinate - scaler.min[axis]) / (scaler.max[axis] - scaler.min[axis])
                     if scaler.max[axis] != scaler.min[axis]
                     else 0.0
                 )
@@ -107,9 +102,7 @@ class TestMinMaxScaler:
 
         for i in range(len(transformed_points)):
             for j in range(len(transformed_points[i])):
-                assert transformed_points[i][j] == pytest.approx(
-                    expected_transformed_points[i][j]
-                )
+                assert transformed_points[i][j] == pytest.approx(expected_transformed_points[i][j])
 
     def test_fit_empty_X(self):
         scaler = MinMaxScaler()
@@ -123,17 +116,13 @@ class TestMinMaxScaler:
 
     def test_fit_different_dimensions(self):
         scaler = MinMaxScaler()
-        with pytest.raises(
-            ValueError, match="there are points with different dimensions in X"
-        ):
+        with pytest.raises(ValueError, match="there are points with different dimensions in X"):
             scaler.fit([(1, 2), (3,), (4, 5, 6)])
 
     def test_transform_different_dimensions(self):
         scaler = MinMaxScaler()
         scaler.fit([(1, 2), (3, 4)])  # Fit first to avoid "not trained" error
-        with pytest.raises(
-            ValueError, match="there are points with different dimensions in X"
-        ):
+        with pytest.raises(ValueError, match="there are points with different dimensions in X"):
             scaler.transform([(1, 2), (3,), (4, 5, 6)])
 
     def test_transform_not_fitted(self):

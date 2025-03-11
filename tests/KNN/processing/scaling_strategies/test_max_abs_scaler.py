@@ -23,9 +23,7 @@ class TestMaxAbsScaler:
             ([(5.0, -1.0), (2.0, -7.0)], 1, 7.0),
         ],
     )
-    def test_get_max_abs_by_axis(
-        self, X: Sequence[Point], axis: int, expected_max_abs: float
-    ):
+    def test_get_max_abs_by_axis(self, X: Sequence[Point], axis: int, expected_max_abs: float):
         scaler = MaxAbsScaler()
         assert scaler._get_max_abs_by_axis(X, axis) == expected_max_abs
 
@@ -115,9 +113,7 @@ class TestMaxAbsScaler:
         scaler = MaxAbsScaler()
         scaler.fit(X_train)
         transformed_X = scaler.transform(X_test)
-        for transformed_point, expected_point in zip(
-            transformed_X, expected_transformed
-        ):
+        for transformed_point, expected_point in zip(transformed_X, expected_transformed):
             assert len(transformed_point) == len(expected_point)
             for i in range(len(transformed_point)):
                 assert pytest.approx(transformed_point[i]) == expected_point[i]
@@ -140,7 +136,4 @@ class TestMaxAbsScaler:
         X = [(1.0, 2.0), (3.0, 4.0)]
         with pytest.raises(ValueError) as exc_info:
             scaler.transform(X)
-        assert (
-            str(exc_info.value)
-            == "MinMaxScaler is not trained. To get started, use the fit method"
-        )
+        assert str(exc_info.value) == "MinMaxScaler is not trained. To get started, use the fit method"

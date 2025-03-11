@@ -96,9 +96,7 @@ class TestKDTNode:
             ),
         ],
     )
-    def test_maintain_init_invariance(
-        self, points, leaf_size, expected_is_leaf, has_children
-    ):
+    def test_maintain_init_invariance(self, points, leaf_size, expected_is_leaf, has_children):
         node = KDTNode(points, leaf_size, is_leaf=True)
         node._maintain_init_invariance()
         assert node.is_leaf == expected_is_leaf

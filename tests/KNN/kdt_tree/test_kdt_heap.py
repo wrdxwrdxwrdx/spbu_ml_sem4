@@ -52,9 +52,7 @@ class TestMaxHeap:
         for point in points_to_push:
             heap.push(ref_point, point)
             heapq.heappush(expected, (euclidean_distance(ref_point, point), point))
-            assert set(sorted(expected)[:capacity]) == set(
-                map(lambda x: (-x[0], x[1]), heap.heap)
-            )
+            assert set(sorted(expected)[:capacity]) == set(map(lambda x: (-x[0], x[1]), heap.heap))
 
     @pytest.mark.parametrize(
         "capacity, points_to_push, expected_empty",
@@ -74,9 +72,7 @@ class TestMaxHeap:
             (2, [(1.5, 2.5)], False),
         ],
     )
-    def test_is_empty(
-        self, capacity: int, points_to_push: list[Point], expected_empty: bool
-    ):
+    def test_is_empty(self, capacity: int, points_to_push: list[Point], expected_empty: bool):
         """Test is_empty method."""
         metric = euclidean_distance
         heap = MaxHeap(metric, capacity)
@@ -109,9 +105,7 @@ class TestMaxHeap:
             (3, [(1.5, 0), (0.5, 0), (2.5, 0)], 2.5),
         ],
     )
-    def test_max_dist(
-        self, capacity: int, points_to_push: list[Point], expected_max_dist: float
-    ):
+    def test_max_dist(self, capacity: int, points_to_push: list[Point], expected_max_dist: float):
         """Test max_dist method."""
         metric = euclidean_distance
         heap = MaxHeap(metric, capacity)
@@ -154,24 +148,16 @@ class TestMaxHeap:
             expected_points_with_distances = []
             for p in points_to_push:
                 expected_points_with_distances.append((-metric(ref_point, p), p))
-            expected_points_with_distances.sort(
-                key=lambda x: x[0]
-            )  # sort by distance DESC
+            expected_points_with_distances.sort(key=lambda x: x[0])  # sort by distance DESC
             expected_points = [item[1] for item in expected_points_with_distances]
 
             if capacity < len(expected_points):
                 expected_points = expected_points[:capacity]
 
-            assert (
-                len(returned_points) == min(capacity, len(points_to_push))
-                if capacity > 0
-                else 0
-            )
+            assert len(returned_points) == min(capacity, len(points_to_push)) if capacity > 0 else 0
 
             # check if all expected points are in returned points. Order doesn't strictly matter for points(), only content.
-            returned_points_set = set(
-                tuple(p) for p in returned_points
-            )  # convert to tuples to make hashable
+            returned_points_set = set(tuple(p) for p in returned_points)  # convert to tuples to make hashable
             expected_points_set = set(tuple(p) for p in expected_points)
             assert returned_points_set == expected_points_set
         else:
