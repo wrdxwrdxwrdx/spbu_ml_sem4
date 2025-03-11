@@ -1,8 +1,9 @@
 from typing import Optional, Sequence
 
 from src.homeworks.KNN.kdt_tree.kdt_node import Point
-from src.homeworks.KNN.processing.scaling_strategies.abstract_scaler import \
-    AbstractScaler
+from src.homeworks.KNN.processing.scaling_strategies.abstract_scaler import (
+    AbstractScaler,
+)
 
 
 class StandardScaler(AbstractScaler):

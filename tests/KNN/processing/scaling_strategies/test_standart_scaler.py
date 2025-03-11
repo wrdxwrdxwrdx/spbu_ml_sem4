@@ -1,7 +1,8 @@
 import pytest
 
-from src.homeworks.KNN.processing.scaling_strategies.standard_scaler import \
-    StandardScaler
+from src.homeworks.KNN.processing.scaling_strategies.standard_scaler import (
+    StandardScaler,
+)
 
 
 class TestStandardScaler:

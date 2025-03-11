@@ -1,7 +1,6 @@
 import pytest
 
-from src.homeworks.KNN.processing.scaling_strategies.min_max_scaler import \
-    MinMaxScaler
+from src.homeworks.KNN.processing.scaling_strategies.min_max_scaler import MinMaxScaler
 
 
 class TestMinMaxScaler:

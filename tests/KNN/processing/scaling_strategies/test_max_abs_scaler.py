@@ -3,8 +3,7 @@ from typing import Sequence
 import pytest
 
 from src.homeworks.KNN.kdt_tree.kdt_node import Point
-from src.homeworks.KNN.processing.scaling_strategies.max_abs_scaler import \
-    MaxAbsScaler
+from src.homeworks.KNN.processing.scaling_strategies.max_abs_scaler import MaxAbsScaler
 
 
 class TestMaxAbsScaler:
